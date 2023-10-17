@@ -42,8 +42,6 @@ export const oauthController = async (req: Request, res: Response, next: NextFun
   const { code } = req.query
   const result = await userService.oauth(code as string)
   const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.newUser}&verify=${result.verify}`
-  console.log(urlRedirect)
-
   return res.redirect(urlRedirect)
 }
 

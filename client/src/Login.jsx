@@ -14,7 +14,6 @@ export default function Login() {
     // new_user va verify la de check xem da la thanh vien moi va da verify hay chua
     localStorage.setItem("access_token", access_token);
     localStorage.setItem("refresh_token", refresh_token);
-    console.log(new_user, verify);
     navigate("/");
   }, [navigate, params]);
   return <div>{Login}</div>;

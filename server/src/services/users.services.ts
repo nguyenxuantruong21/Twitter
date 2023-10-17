@@ -12,6 +12,7 @@ import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatusCode'
 import Follower from '~/models/schemas/Followers'
 import axios, { HttpStatusCode } from 'axios'
+import { header } from 'express-validator'
 config()
 
 class UserService {
