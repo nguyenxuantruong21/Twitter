@@ -16,5 +16,5 @@ export default function Login() {
     localStorage.setItem("refresh_token", refresh_token);
     navigate("/");
   }, [navigate, params]);
-  return <div>{Login}</div>;
+  return <div>Login</div>;
 }

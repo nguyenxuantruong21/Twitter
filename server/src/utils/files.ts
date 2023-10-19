@@ -2,6 +2,7 @@ import formidable from 'formidable'
 import { Request } from 'express'
 import fs from 'fs'
 import path from 'path'
+import { File } from 'formidable'
 
 const uploadFolderPath = path.resolve('uploads')
 
@@ -27,7 +28,7 @@ export const handleUploadSingleImage = async (req: Request) => {
       return valid
     }
   })
-  return new Promise((resolve, reject) => {
+  return new Promise<File>((resolve, reject) => {
     form.parse(req, (err, fields, files) => {
       if (err) {
         return reject(err)
@@ -35,7 +36,7 @@ export const handleUploadSingleImage = async (req: Request) => {
       if (!files.image) {
         return reject(new Error('File is empty'))
       }
-      resolve(files)
+      resolve(files.image[0])
     })
   })
 }
