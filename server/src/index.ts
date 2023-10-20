@@ -4,17 +4,20 @@ import databaseService from './services/database.services'
 import { defaultErrorHandler } from './middlewares/errors.middlewares'
 import mediasRouter from './routes/medias.routes'
 import { initFolder } from './utils/files'
+import { config } from 'dotenv'
+import staticRouter from './routes/static.routes'
+
+config()
 
 databaseService.connect()
-const app = express()
-const port = 4000
-
-app.use(express.json())
-// tao
 initFolder()
+const app = express()
+const port = process.env.PORT || 4000
+app.use(express.json())
 
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
+app.use('/static', staticRouter)
 
 app.use(defaultErrorHandler)
 
