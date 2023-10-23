@@ -55,6 +55,14 @@ export default function Home() {
           </span>
         )}
       </p>
+      <div>
+        <video width={500} height={500} controls>
+          <source
+            src="http://localhost:4000/static/video-stream/fa9d31507c42cd33bd8059f00.mp4"
+            type="video/mp4"
+          />
+        </video>
+      </div>
     </>
   );
 }
