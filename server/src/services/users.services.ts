@@ -225,6 +225,23 @@ class UserService {
     }
   }
 
+  async refreshToken(refresh_token: string, user_id: string, verify: UserVerifyStatus) {
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id, verify }),
+      this.signRefreshToken({ user_id, verify }),
+      databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    ])
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: refresh_token
+      })
+    )
+    return {
+      new_access_token,
+      new_refresh_token
+    }
+  }
   // thoi diem tiem tai gia tri cap nhat
   // thoi diem ma mongodb no cap nhat
   async verifyEmail(user_id: string) {
