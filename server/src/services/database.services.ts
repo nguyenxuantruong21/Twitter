@@ -54,7 +54,7 @@ class DatabaseService {
   async indexFollower() {
     const exits = this.followers.indexExists(['user_id_1', 'followed_user_id_1'])
     if (!exits) {
-      this.videoStatus.createIndex({ user_id: 1, followed_user_id: 1 })
+      this.followers.createIndex({ user_id: 1, followed_user_id: 1 })
     }
   }
 
