@@ -9,7 +9,12 @@ import staticRouter from './routes/static.routes'
 import cors from 'cors'
 
 config()
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexUser()
+  databaseService.indexRefreshToken()
+  databaseService.indexVideoStatus()
+  databaseService.indexFollower()
+})
 initFolder()
 const app = express()
 const port = process.env.PORT || 4000

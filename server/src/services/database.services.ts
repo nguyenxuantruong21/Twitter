@@ -6,7 +6,6 @@ import Follower from '~/models/schemas/Followers.schema'
 import VideoStatus from '~/models/schemas/videoStatus.schema'
 
 config()
-
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@twitter.ve28vlz.mongodb.net/?retryWrites=true&w=majority`
 
 class DatabaseService {
@@ -25,6 +24,37 @@ class DatabaseService {
     } catch (error) {
       console.log(error)
       throw error
+    }
+  }
+
+  async indexUser() {
+    const exits = await this.users.indexExists(['email_1', 'email_1_password_1', 'username_1'])
+    if (!exits) {
+      this.users.createIndex({ email: 1, password: 1 })
+      this.users.createIndex({ email: 1 }, { unique: true })
+      this.users.createIndex({ username: 1 }, { unique: true })
+    }
+  }
+
+  async indexRefreshToken() {
+    const exits = await this.users.indexExists(['exp_1', 'token_1'])
+    if (!exits) {
+      this.refreshTokens.createIndex({ token: 1 })
+      this.refreshTokens.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
+    }
+  }
+
+  async indexVideoStatus() {
+    const exits = await this.users.indexExists(['name_1'])
+    if (!exits) {
+      this.videoStatus.createIndex({ name: 1 })
+    }
+  }
+
+  async indexFollower() {
+    const exits = this.followers.indexExists(['user_id_1', 'followed_user_id_1'])
+    if (!exits) {
+      this.videoStatus.createIndex({ user_id: 1, followed_user_id: 1 })
     }
   }
 
