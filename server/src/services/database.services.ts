@@ -1,8 +1,10 @@
 import { Collection, Db, MongoClient } from 'mongodb'
 import { config } from 'dotenv'
 import User from '~/models/schemas/User.schema'
-import RefreshToken from '~/models/schemas/RefreshToken'
-import Follower from '~/models/schemas/Followers'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import Follower from '~/models/schemas/Followers.schema'
+import VideoStatus from '~/models/schemas/videoStatus.schema'
+
 config()
 
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@twitter.ve28vlz.mongodb.net/?retryWrites=true&w=majority`
@@ -36,6 +38,10 @@ class DatabaseService {
 
   get followers(): Collection<Follower> {
     return this.db.collection(process.env.DB_FOLLOWERS_COLLECTION as string)
+  }
+
+  get videoStatus(): Collection<VideoStatus> {
+    return this.db.collection(process.env.DB_VIDEO_STATUS_COLLECTION as string)
   }
 }
 

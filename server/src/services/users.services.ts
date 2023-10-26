@@ -4,14 +4,14 @@ import User from '~/models/schemas/User.schema'
 import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
 import { TokenType, UserVerifyStatus } from '~/constants/enum'
-import RefreshToken from '~/models/schemas/RefreshToken'
 import { ObjectId } from 'mongodb'
 import { config } from 'dotenv'
 import { USERS_MESSAGES } from '~/constants/messages'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatusCode'
-import Follower from '~/models/schemas/Followers'
 import axios, { HttpStatusCode } from 'axios'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import Follower from '~/models/schemas/Followers.schema'
 config()
 
 class UserService {

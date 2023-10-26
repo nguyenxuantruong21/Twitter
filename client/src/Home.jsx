@@ -4,6 +4,14 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { Link } from "react-router-dom";
+import "vidstack/styles/defaults.css";
+import "vidstack/styles/community-skin/video.css";
+import {
+  MediaCommunitySkin,
+  MediaOutlet,
+  MediaPlayer,
+  MediaPoster,
+} from "@vidstack/react";
 
 const getGoogleAuthUrl = () => {
   const url = `https://accounts.google.com/o/oauth2/v2/auth`;
@@ -58,10 +66,24 @@ export default function Home() {
       <div>
         <video width={500} height={500} controls>
           <source
-            src="http://localhost:4000/static/video-stream/fa9d31507c42cd33bd8059f00.mp4"
+            src="http://localhost:4000/static/video-hls/ZF2GgnHJPnUBvPFNQtUXm"
             type="video/mp4"
           />
         </video>
+        <h2>HLS Streaming</h2>
+        <MediaPlayer
+          title="Sprite Fight"
+          src="http://localhost:4000/static/video-hls/Hn3LkTdCGyUbOeRIKgRL6/master.m3u8"
+          // poster='https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=980'
+          // thumbnails='https://media-files.vidstack.io/sprite-fight/thumbnails.vtt'
+          aspectRatio={16 / 9}
+          crossorigin=""
+        >
+          <MediaOutlet>
+            <MediaPoster alt="Girl walks into sprite gnomes around her friend on a campfire in danger!" />
+          </MediaOutlet>
+          <MediaCommunitySkin />
+        </MediaPlayer>
       </div>
     </>
   );
