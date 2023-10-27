@@ -7,10 +7,10 @@ import fsPromies from 'fs/promises'
 import { isProduction } from '~/constants/config'
 import { config } from 'dotenv'
 import { EncodingStatus, MediaType } from '~/constants/enum'
-import { Media } from '~/models/orther'
+import { Media } from '~/models/Orther'
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
 import databaseService from './database.services'
-import VideoStatus from '~/models/schemas/videoStatus.schema'
+import VideoStatus from '~/models/schemas/VideoStatus.schema'
 config()
 
 class Quere {

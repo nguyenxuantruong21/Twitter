@@ -100,6 +100,11 @@ class UserService {
     return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
   }
 
+  /**
+   *
+   * @param code
+   * @returns { access_token: string ,id_token: string }
+   */
   private async getOauthGoogleToken(code: string) {
     const body = {
       code,
@@ -119,6 +124,12 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param access_token
+   * @param id_token
+   * @returns information in user sign in google
+   */
   private async getGoogleUserInfo(access_token: string, id_token: string) {
     const { data } = await axios.get('https://www.googleapis.com/oauth2/v1/userinfo', {
       params: { access_token, alt: 'json' },
@@ -136,11 +147,24 @@ class UserService {
     }
   }
 
+  /**
+   * @param refresh_token
+   * @returns {decoded refresh_token}
+   */
   private decodeRefreshToken(refresh_token: string) {
     return verifyToken({ token: refresh_token, secretOrpublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string })
   }
 
   /// METHOD FOR USER
+  /**
+   *
+   * @param {payload}
+   * @returns {
+   *  insert user in database
+   *  sign access_token and refresh_token
+   * insert refresh_token in database
+   * }
+   */
   async register(payload: RegisterReqBody) {
     const user_id = new ObjectId()
     const email_verify_token = await this.signEmailVerifyToken({
@@ -177,6 +201,11 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param user_id
+   * @returns {access_token, refresh_token}
+   */
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({ user_id, verify })
     const { exp, iat } = await this.decodeRefreshToken(refresh_token)
@@ -194,10 +223,14 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param {code}
+   * @returns
+   */
   async oauth(code: string) {
     const { access_token, id_token } = await this.getOauthGoogleToken(code)
     const userInfo = await this.getGoogleUserInfo(access_token, id_token)
-
     if (!userInfo.verified_email) {
       throw new ErrorWithStatus({
         message: USERS_MESSAGES.GMAIL_NOT_VERIFIED,
@@ -244,11 +277,21 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param email
+   * @returns {Boolean()}
+   */
   async checkEmailExist(email: string) {
     const result = await databaseService.users.findOne({ email })
     return Boolean(result)
   }
 
+  /**
+   *
+   * @param refresh_token
+   * @returns {delete refresh_token in database}
+   */
   async logout(refresh_token: string) {
     await databaseService.refreshTokens.deleteOne({ token: refresh_token })
     return {
@@ -256,6 +299,16 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param refresh_token
+   * @param user_id
+   * @param verify
+   * @param exp
+   * 1: sign access_token, refresh_token
+   * 2: delete old refresh token
+   * @returns {access_token, refresh_token}
+   */
   async refreshToken(refresh_token: string, user_id: string, verify: UserVerifyStatus, exp: number) {
     const [new_access_token, new_refresh_token] = await Promise.all([
       this.signAccessToken({ user_id, verify }),
@@ -278,6 +331,11 @@ class UserService {
   }
   // thoi diem tiem tai gia tri cap nhat
   // thoi diem ma mongodb no cap nhat
+  /**
+   *
+   * @param user_id
+   * @returns {access_token, refresh_token}
+   */
   async verifyEmail(user_id: string) {
     await databaseService.users.updateOne({ _id: new ObjectId(user_id) }, [
       {
@@ -307,6 +365,13 @@ class UserService {
     }
   }
 
+  /**
+   * @param user_id
+   * @returns {
+   *  sign email verify token
+   *  update in database
+   * }
+   */
   async resendVerifyEmail(user_id: string) {
     const email_verify_token = await this.signEmailVerifyToken({
       user_id: user_id.toString(),
@@ -328,6 +393,11 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param param0
+   * @returns {update forgot password token}
+   */
   async forgotPassword({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const forgot_password_token = await this.signForgotPasswordToken({ user_id, verify })
     await databaseService.users.updateOne(
@@ -348,6 +418,12 @@ class UserService {
     }
   }
 
+  /**
+   *
+   * @param user_id
+   * @param password
+   * @returns {reset password in database, update new password}
+   */
   async resetPassword(user_id: string, password: string) {
     await databaseService.users.updateOne(
       { _id: new ObjectId(user_id) },
@@ -380,6 +456,14 @@ class UserService {
     return user
   }
 
+  /**
+   *
+   * @param user_id
+   * @param payload
+   * @returns {
+   *  update information
+   * }
+   */
   async updateMe(user_id: string, payload: UpdateMeReqBody) {
     const _payload = payload.date_of_birth ? { ...payload, date_of_birth: new Date(payload.date_of_birth) } : payload
     const user = await databaseService.users.findOneAndUpdate(

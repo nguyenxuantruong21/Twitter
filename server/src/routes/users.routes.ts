@@ -52,7 +52,6 @@ usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
  * Method: get
  * body: {}
  */
-// usersRouter.get('/oauth/google', wrapRequestHandler(oauthController))
 usersRouter.get('/oauth/google', wrapRequestHandler(oauthController))
 /**
  * description:  register a user

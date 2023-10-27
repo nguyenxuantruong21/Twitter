@@ -74,6 +74,13 @@ const confirmPasswordSchema: ParamSchema = {
   }
 }
 
+/**
+ * check forgot token
+ * decoded forgot token => user_id
+ *  find user (user_id)
+ *  check forgot token in user
+ * req.decoded_forgot_password_token = decoded_forgot_password_token
+ */
 const forgotPasswordTokenSchema: ParamSchema = {
   trim: true,
   custom: {
@@ -183,7 +190,11 @@ const imageSchema: ParamSchema = {
   }
 }
 
-// validator login
+/**
+ * validator login
+ *` find user exist in database
+  req.user = user
+ */
 export const loginValidator = validate(
   checkSchema(
     {
@@ -220,6 +231,7 @@ export const loginValidator = validate(
 /**
  * validator register
  * name, email, password, confirm_password, date_of_birth
+ * check email exist in database
  */
 
 export const registerValidator = validate(
@@ -252,6 +264,12 @@ export const registerValidator = validate(
   )
 )
 
+/**
+ * accesstoken validator
+ * get accesstoken (Bearer acctk)
+ * decoded authorization
+ * req.decoded_authorization = decoded_authorization
+ */
 export const accessTokenValidator = validate(
   checkSchema(
     {
@@ -286,6 +304,12 @@ export const accessTokenValidator = validate(
   )
 )
 
+/**
+ * check refresh token
+ * decoded refresh token
+ * find refresh token in database
+ * req.decoded_refresh_token = decoded_refresh_token
+ */
 export const refreshTokenValidator = validate(
   checkSchema(
     {
@@ -329,6 +353,12 @@ export const refreshTokenValidator = validate(
   )
 )
 
+/**
+ * check email verify token 
+ * decoded email verify
+ return (req.decoded_email_verify_token = decoded_email_verify_token)
+ * 
+ */
 export const verifyEmailValidator = validate(
   checkSchema(
     {
@@ -362,6 +392,12 @@ export const verifyEmailValidator = validate(
   )
 )
 
+/**
+ * check forgot password token 
+ * find forgot password in database
+  return (req.user = user)
+ * 
+ */
 export const forgotPasswordValidator = validate(
   checkSchema(
     {
@@ -413,6 +449,9 @@ export const resetPasswordValidator = validate(
   )
 )
 
+/**
+ * check verified
+ */
 export const verifiedUserValidator = (req: Request, res: Response, next: NextFunction) => {
   const { verify } = req.decoded_authorization as TokenPayload
   if (verify !== UserVerifyStatus.Verified) {
@@ -524,6 +563,12 @@ export const unFollowValidator = validate(
   )
 )
 
+/**
+ * check old password
+ * send old password to client from database
+ * find user
+ * check password is match
+ */
 export const changePasswordValidator = validate(
   checkSchema({
     old_password: {

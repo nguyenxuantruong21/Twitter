@@ -7,6 +7,7 @@ import { initFolder } from './utils/files'
 import { config } from 'dotenv'
 import staticRouter from './routes/static.routes'
 import cors from 'cors'
+import tweetRouter from './routes/tweet.routes'
 
 config()
 databaseService.connect().then(() => {
@@ -24,6 +25,7 @@ app.use(cors())
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/static', staticRouter)
+app.use('/tweets', tweetRouter)
 
 app.use(defaultErrorHandler)
 

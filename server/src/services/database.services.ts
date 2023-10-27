@@ -3,7 +3,8 @@ import { config } from 'dotenv'
 import User from '~/models/schemas/User.schema'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Follower from '~/models/schemas/Followers.schema'
-import VideoStatus from '~/models/schemas/videoStatus.schema'
+import VideoStatus from '~/models/schemas/VideoStatus.schema'
+import Tweet from '~/models/schemas/Tweet.schema'
 
 config()
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@twitter.ve28vlz.mongodb.net/?retryWrites=true&w=majority`
@@ -16,6 +17,9 @@ class DatabaseService {
     this.db = this.client.db(process.env.DB_NAME)
   }
 
+  /**
+   * connect to database
+   */
   async connect() {
     try {
       // Send a ping to confirm a successful connection
@@ -72,6 +76,10 @@ class DatabaseService {
 
   get videoStatus(): Collection<VideoStatus> {
     return this.db.collection(process.env.DB_VIDEO_STATUS_COLLECTION as string)
+  }
+
+  get tweets(): Collection<Tweet> {
+    return this.db.collection(process.env.DB_TWEET_COLLECTION as string)
   }
 }
 

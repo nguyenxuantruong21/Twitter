@@ -3,6 +3,11 @@ import { JwtPayload, SignOptions, sign, verify } from 'jsonwebtoken'
 import { TokenPayload } from '~/models/requests/User.requests'
 config()
 
+/**
+ *
+ * @param {payload, privateKey, options}
+ * @returns {token}
+ */
 export const signToken = ({
   payload,
   privateKey,
