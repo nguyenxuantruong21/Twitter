@@ -8,6 +8,8 @@ import { config } from 'dotenv'
 import staticRouter from './routes/static.routes'
 import cors from 'cors'
 import tweetRouter from './routes/tweet.routes'
+import bookmarksRouter from './routes/bookmarks.routes'
+import likesRouter from './routes/likes.routes'
 
 config()
 databaseService.connect().then(() => {
@@ -26,6 +28,8 @@ app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/static', staticRouter)
 app.use('/tweets', tweetRouter)
+app.use('/bookmarks', bookmarksRouter)
+app.use('/likes', likesRouter)
 
 app.use(defaultErrorHandler)
 
