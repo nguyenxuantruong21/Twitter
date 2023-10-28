@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express'
 import { TweetRequestBody } from '~/models/requests/Tweet.request'
 import { ParamsDictionary } from 'express-serve-static-core'
 import tweetsServices from '~/services/tweets.services'
-import { TWEETS_MESSAGES } from '~/constants/messages'
 import { TokenPayload } from '~/models/requests/User.requests'
 
 export const createTweetController = async (
@@ -15,5 +14,15 @@ export const createTweetController = async (
   return res.json({
     message: 'Create tweet successfully!!',
     data: result
+  })
+}
+
+export const getTweetController = async (
+  req: Request<ParamsDictionary, any, TweetRequestBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  return res.json({
+    message: 'thanh cong'
   })
 }
