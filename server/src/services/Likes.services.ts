@@ -16,6 +16,14 @@ class LikesServices {
     )
     return result
   }
+
+  async unLikeTweet(user_id: string, tweet_id: string) {
+    const result = await databaseService.likes.findOneAndDelete({
+      user_id: new ObjectId(user_id),
+      tweet_id: new ObjectId(tweet_id)
+    })
+    return result
+  }
 }
 
 const likesServices = new LikesServices()
