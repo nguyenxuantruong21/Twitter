@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { TweetRequestBody } from '~/models/requests/Tweet.request'
+import { Pagination, TweetParam, TweetQuery, TweetRequestBody } from '~/models/requests/Tweet.request'
 import { ParamsDictionary } from 'express-serve-static-core'
 import tweetsServices from '~/services/tweets.services'
 import { TokenPayload } from '~/models/requests/User.requests'
@@ -18,11 +18,7 @@ export const createTweetController = async (
   })
 }
 
-export const getTweetController = async (
-  req: Request<ParamsDictionary, any, TweetRequestBody>,
-  res: Response,
-  next: NextFunction
-) => {
+export const getTweetController = async (req: Request, res: Response, next: NextFunction) => {
   const result = await tweetsServices.increaseView(req.params.tweet_id, req.decoded_authorization?.user_id)
   const tweet = {
     ...req.tweet,
@@ -37,7 +33,7 @@ export const getTweetController = async (
 }
 
 export const getTweetChildrenController = async (
-  req: Request<ParamsDictionary, any, TweetRequestBody>,
+  req: Request<ParamsDictionary, any, TweetQuery>,
   res: Response,
   next: NextFunction
 ) => {
@@ -61,6 +57,26 @@ export const getTweetChildrenController = async (
       page,
       limit,
       total_page: Math.ceil(total / limit)
+    }
+  })
+}
+
+export const getNewFeedsController = async (
+  req: Request<ParamsDictionary, any, Pagination>,
+  res: Response,
+  next: NextFunction
+) => {
+  const user_id = req.decoded_authorization?.user_id as string
+  const page = Number(req.query.page as string)
+  const limit = Number(req.query.limit as string)
+  const result = await tweetsServices.getNewFeeds({ user_id, limit, page })
+  return res.json({
+    message: 'Get New Feeds successfully!!',
+    data: {
+      tweets: result.tweets,
+      limit,
+      page,
+      total_page: Math.ceil(result.total / limit)
     }
   })
 }

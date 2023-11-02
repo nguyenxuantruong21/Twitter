@@ -313,3 +313,26 @@ export const getTweetChildrenValidator = validate(
     ['query']
   )
 )
+
+export const paginationValidator = validate(
+  checkSchema(
+    {
+      limit: {
+        isNumeric: true,
+        custom: {
+          options: async (value, { req }) => {
+            const num = Number(value)
+            if (num > 100 || num < 1) {
+              throw new Error('1 <= limit <= 100')
+            }
+            return true
+          }
+        }
+      },
+      page: {
+        isNumeric: true
+      }
+    },
+    ['query']
+  )
+)
