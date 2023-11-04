@@ -10,6 +10,7 @@ import cors from 'cors'
 import tweetRouter from './routes/tweet.routes'
 import bookmarksRouter from './routes/bookmarks.routes'
 import likesRouter from './routes/likes.routes'
+import searchRouter from './routes/search.routes'
 
 config()
 databaseService.connect().then(() => {
@@ -17,6 +18,7 @@ databaseService.connect().then(() => {
   databaseService.indexRefreshToken()
   databaseService.indexVideoStatus()
   databaseService.indexFollower()
+  databaseService.indexTweets()
 })
 initFolder()
 const app = express()
@@ -30,6 +32,7 @@ app.use('/static', staticRouter)
 app.use('/tweets', tweetRouter)
 app.use('/bookmarks', bookmarksRouter)
 app.use('/likes', likesRouter)
+app.use('/search', searchRouter)
 
 app.use(defaultErrorHandler)
 
