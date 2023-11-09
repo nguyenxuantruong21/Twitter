@@ -87,7 +87,7 @@ export const createTweetValidator = validate(
       isArray: true,
       custom: {
         options: (value, { req }) => {
-          // yeu cau moi phan tu trong array la user_id
+          // yeu cau moi phan tu trong array la ObjectId
           if (value.some((item: any) => !ObjectId.isValid(item))) {
             throw new Error(TWEETS_MESSAGES.MENTIONS_MUST_BE_AN_ARRAY_OF_USER_ID)
           }

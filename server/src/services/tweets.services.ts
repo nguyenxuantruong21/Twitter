@@ -37,7 +37,11 @@ class TweetsServices {
     return result
   }
 
-  async increaseView(tweet_id: string, user_id?: string) {
+  async getTweet(tweet_id: string, user_id?: string) {
+    /**
+     * chech xem user da dang nhap hay chua
+     * neu dang nhap roi thi tang user_views con chua dang nhap thi tang guest_views
+     * */
     const inc = user_id ? { user_views: 1 } : { guest_views: 1 }
     const result = await databaseService.tweets.findOneAndUpdate(
       { _id: new ObjectId(tweet_id) },
@@ -197,7 +201,9 @@ class TweetsServices {
         }
       ])
       .toArray()
+    // lay id cac tweet children
     const ids = tweets.map((tweet) => tweet._id as ObjectId)
+    // tang view cho moi lan get
     const inc = user_id ? { user_views: 1 } : { guest_views: 1 }
     await databaseService.tweets.updateMany(
       {
@@ -212,6 +218,7 @@ class TweetsServices {
         }
       }
     )
+    // hien thi cho UI thu cong
     tweets.forEach((tweet) => {
       tweet.updated_at = new Date()
       if (user_id) {
