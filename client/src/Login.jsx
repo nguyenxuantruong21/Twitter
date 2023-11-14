@@ -9,6 +9,7 @@ export default function Login() {
   useEffect(() => {
     const access_token = params.get("access_token");
     const refresh_token = params.get("refresh_token");
+    console.log("this is login");
     const new_user = params.get("new_user");
     const verify = params.get("verify");
     // new_user va verify la de check xem da la thanh vien moi va da verify hay chua
