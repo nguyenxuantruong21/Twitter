@@ -13,6 +13,9 @@ import likesRouter from './routes/likes.routes'
 import searchRouter from './routes/search.routes'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import Conversation from './models/schemas/Conversation.schema'
+import conversationsRouter from './routes/conversation.routes'
+import { ObjectId } from 'mongodb'
 config()
 databaseService.connect().then(() => {
   databaseService.indexUser()
@@ -36,6 +39,7 @@ app.use('/tweets', tweetRouter)
 app.use('/bookmarks', bookmarksRouter)
 app.use('/likes', likesRouter)
 app.use('/search', searchRouter)
+app.use('/conversations', conversationsRouter)
 
 app.use(defaultErrorHandler)
 
@@ -58,9 +62,16 @@ io.on('connection', (socket) => {
   users[user_id] = {
     socket_id: socket.id
   }
-  socket.on('private message', (data) => {
+  socket.on('private message', async (data) => {
     const receiver_socket_id = users[data.to].socket_id
     if (!receiver_socket_id) return
+    await databaseService.conversations.insertOne(
+      new Conversation({
+        sender_id: new ObjectId(data.from),
+        receiver_id: new ObjectId(data.to),
+        content: data.content
+      })
+    )
     socket.to(receiver_socket_id).emit('receive private message', {
       content: data.content,
       from: user_id

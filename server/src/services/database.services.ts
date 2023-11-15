@@ -8,6 +8,7 @@ import Tweet from '~/models/schemas/Tweet.schema'
 import Hashtag from '~/models/schemas/Hashtag.schema'
 import { Bookmarks } from '~/models/schemas/BookMarks.schema'
 import { Like } from '~/models/schemas/Likes.schema'
+import Conversation from '~/models/schemas/Conversation.schema'
 
 config()
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@twitter.ve28vlz.mongodb.net/?retryWrites=true&w=majority`
@@ -25,7 +26,7 @@ class DatabaseService {
    */
   async connect() {
     try {
-      // Send a ping to confirm a successful connection
+      // Send a ping to confirm a successfull connection
       await this.db.command({ ping: 1 })
       console.log('Pinged your deployment. You successfully connected to MongoDB!')
     } catch (error) {
@@ -102,6 +103,10 @@ class DatabaseService {
 
   get likes(): Collection<Like> {
     return this.db.collection(process.env.DB_LIKES_COLLECTION as string)
+  }
+
+  get conversations(): Collection<Conversation> {
+    return this.db.collection(process.env.DB_CONVERSATIONS_COLLECTION as string)
   }
 }
 

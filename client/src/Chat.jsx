@@ -55,6 +55,7 @@ export default function Chat() {
     socket.emit("private message", {
       content: value,
       to: receiver,
+      from: profile._id,
     });
     setMessages((messages) => [
       ...messages,
