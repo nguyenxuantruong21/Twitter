@@ -2,21 +2,22 @@ import { useEffect, useState } from "react";
 import socket from "./socket";
 import axios from "axios";
 
+const profile = JSON.parse(localStorage.getItem("profile"));
+const usernames = [
+  {
+    name: "user1",
+    value: "Truongdev1",
+  },
+  {
+    name: "user2",
+    value: "truongdev",
+  },
+];
+
 export default function Chat() {
-  const profile = JSON.parse(localStorage.getItem("profile"));
   const [value, setValue] = useState("");
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState("");
-  const usernames = [
-    {
-      name: "user1",
-      value: "Truongdev1",
-    },
-    {
-      name: "user2",
-      value: "truongdev",
-    },
-  ];
 
   const getProfile = (username) => {
     axios
@@ -25,7 +26,6 @@ export default function Chat() {
       })
       .then((res) => {
         setReceiver(res.data.data._id);
-        alert(`Now you can chat ${res.data.data.name}`);
       });
   };
 
@@ -34,10 +34,10 @@ export default function Chat() {
       _id: profile._id,
     };
     socket.connect();
-    socket.on("receiver private message", (data) => {
+    socket.on("receive private message", (data) => {
       const content = data.content;
-      setMessages((message) => [
-        ...message,
+      setMessages((messages) => [
+        ...messages,
         {
           content,
           isSender: false,
@@ -49,7 +49,7 @@ export default function Chat() {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const send = (e) => {
     e.preventDefault();
     setValue("");
     socket.emit("private message", {
@@ -58,23 +58,16 @@ export default function Chat() {
     });
     setMessages((messages) => [
       ...messages,
-      {
-        content: value,
-        isSender: true,
-      },
+      { content: value, isSender: true },
     ]);
   };
-
   return (
     <div>
       <h1>Chat</h1>
       <div>
         {usernames.map((username) => (
           <div key={username.name}>
-            <button
-              key={username.name}
-              onClick={() => getProfile(username.value)}
-            >
+            <button onClick={() => getProfile(username.value)}>
               {username.name}
             </button>
           </div>
@@ -86,9 +79,7 @@ export default function Chat() {
             <div className="message-container">
               <div
                 className={
-                  message.isSender === true
-                    ? "message-right message"
-                    : "message"
+                  "message " + (message.isSender ? "message-right" : "")
                 }
               >
                 {message.content}
@@ -97,12 +88,10 @@ export default function Chat() {
           </div>
         ))}
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={send}>
         <input
           type="text"
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
+          onChange={(e) => setValue(e.target.value)}
           value={value}
         />
         <button type="submit">Send</button>
