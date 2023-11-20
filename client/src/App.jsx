@@ -7,7 +7,6 @@ import axios from "axios";
 function App() {
   useEffect(() => {
     const controller = new AbortController();
-    console.log("this is err");
     axios
       .get("/users/me", {
         headers: {
@@ -17,7 +16,6 @@ function App() {
         signal: controller.signal,
       })
       .then((res) => {
-        console.log(res);
         localStorage.setItem("profile", JSON.stringify(res.data.data));
       });
     return () => {

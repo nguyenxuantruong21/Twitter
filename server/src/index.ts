@@ -55,6 +55,7 @@ const users: {
     socket_id: string
   }
 } = {}
+
 io.on('connection', (socket) => {
   console.log(`user ${socket.id} connected`)
   // user id client 1
@@ -62,19 +63,22 @@ io.on('connection', (socket) => {
   users[user_id] = {
     socket_id: socket.id
   }
-  socket.on('private message', async (data) => {
-    const receiver_socket_id = users[data.to].socket_id
+  socket.on('send_message', async (data) => {
+    const { receiver_id, sender_id, content } = data.payload
+    // check socket id exist
+    const receiver_socket_id = users[receiver_id].socket_id
     if (!receiver_socket_id) return
-    await databaseService.conversations.insertOne(
-      new Conversation({
-        sender_id: new ObjectId(data.from),
-        receiver_id: new ObjectId(data.to),
-        content: data.content
-      })
-    )
-    socket.to(receiver_socket_id).emit('receive private message', {
-      content: data.content,
-      from: user_id
+    // create message sent to client 2
+    const conversation = new Conversation({
+      sender_id: new ObjectId(sender_id),
+      receiver_id: new ObjectId(receiver_id),
+      content: content
+    })
+    // insert in database
+    const result = await databaseService.conversations.insertOne(conversation)
+    conversation._id = result.insertedId
+    socket.to(receiver_socket_id).emit('receive_message', {
+      payload: conversation
     })
   })
   socket.on('disconnect', () => {

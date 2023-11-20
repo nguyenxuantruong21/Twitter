@@ -24,7 +24,6 @@ class ConversationService {
       .skip(limit * (page - 1))
       .limit(limit)
       .toArray()
-
     const total = await databaseService.conversations.countDocuments(match)
     return {
       conversation,
