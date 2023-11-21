@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: Twitter clone TypeScript
+  description: |-
+
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: Users
+    description: Các API liên quan đến User
+paths:
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Đăng nhập
+      description: Đăng nhập vào hệ thống
+      operationId: login
+      requestBody:
+        description: Thông tin đăng nhập
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+        required: true
+      responses:
+        '200':
+          description: Dang nhap thanh cong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Login success'
+                  data:
+                    $ref: '#/components/schemas/SuccessAuthentication'
+
+        '422':
+          description: Invalid input
+
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Lấy thông tin users
+      description: Lấy thông tin users
+      operationId: getMe
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lấy thông tin thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Login success'
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /users/register:
+    post:
+      tags:
+        - Users
+      summary: Đăng Ký
+      description: Đăng ký vào hệ thống
+      operationId: register
+      requestBody:
+        description: Thông tin đăng ký
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBody'
+        required: true
+      responses:
+        '200':
+          description: đăng ký thanh công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Register success'
+                  data:
+                    $ref: '#/components/schemas/SuccessAuthentication'
+
+  /users/logout:
+    post:
+      tags:
+        - Users
+      summary: Đăng suất
+      description: Đăng suất vào hệ thống
+      operationId: logout
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: đăng suất
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenBody'
+        required: true
+      responses:
+        '200':
+          description: đăng suất thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Logout success'
+
+  /users/refresh-token:
+    post:
+      tags:
+        - Users
+      summary: refresh token
+      description: refresh token
+      operationId: refresh token
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: refresh token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenBody'
+        required: true
+      responses:
+        '200':
+          description: Refresh token success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Refresh token success'
+                  data:
+                    $ref: '#/components/schemas/SuccessAuthentication'
+
+  /users/verify-email:
+    post:
+      tags:
+        - Users
+      summary: email verify
+      description: email verify token
+      operationId: email verify token
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: email verify token
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerify'
+        required: true
+      responses:
+        '200':
+          description: verify email success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Email verify success'
+                  data:
+                    $ref: '#/components/schemas/SuccessAuthentication'
+components:
+  schemas:
+    RegisterBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: admin11
+        email:
+          type: string
+          example: test13@gmail.com
+        password:
+          type: string
+          example: Testtest1@
+        confirm_password:
+          type: string
+          example: Testtest1@
+        date_of_birth:
+          type: 'string'
+          format: 'ISO8601'
+          example: '2023-09-27T14:53:02.393Z'
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: test9@gmail.com
+        password:
+          type: string
+          example: Testtest1@
+    RefreshTokenBody:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjUyNDIxNTUxYzBlNzc4NjAwYWM2YWU3IiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3MDA1NTU0NTYsImV4cCI6MTcwMDY0MTg1Nn0.cZm9CQuIZxEqzydH3PjgnXsIU5t7UteJKF8egMIK06U'
+    SuccessAuthentication:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjUyNDIxNTUxYzBlNzc4NjAwYWM2YWU3IiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3MDA1NTU0NTYsImV4cCI6MTcwMDY0MTg1Nn0.cZm9CQuIZxEqzydH3PjgnXsIU5t7UteJKF8egMIK06U'
+        refresh_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjUyNDIxNTUxYzBlNzc4NjAwYWM2YWU3IiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3MDA1NTU0NTYsImV4cCI6MTcwMDY0MTg1Nn0.cZm9CQuIZxEqzydH3PjgnXsIU5t7UteJKF8egMIK06U'
+    User:
+      type: 'object'
+      properties:
+        _id:
+          type: 'string'
+          format: MongoId
+        name:
+          type: 'string'
+          example: 'Con ca co'
+        email:
+          type: 'string'
+          format: 'email'
+          example: 'test9@gmail.com'
+        date_of_birth:
+          type: 'string'
+          format: 'ISO8601'
+          example: '2023-09-27T14:53:02.393Z'
+        created_at:
+          type: 'string'
+          format: 'ISO8601'
+          example: '2023-10-09T15:50:45.690Z'
+        updated_at:
+          type: 'string'
+          format: 'ISO8601'
+          example: '2023-10-10T07:45:58.161Z'
+        verify:
+          type: 'integer'
+          $ref: '#/components/schemas/UserVerifyStatus'
+        tweet_cricle:
+          type: array
+          items:
+            type: string
+            format: MongoId
+          example: ['34343ll4343hk434']
+        bio:
+          type: 'string'
+          example: 'truong dep trai'
+        location:
+          type: 'string'
+          example: 'ba vi ha noi'
+        website:
+          type: 'string'
+          format: 'uri'
+          example: 'truongdev.com.vn'
+        username:
+          type: 'string'
+          example: 'Truongdev1'
+        avatar:
+          type: 'string'
+          format: 'uri'
+          example: 'http://cover.jpg'
+        cover_photo:
+          type: 'string'
+          format: 'uri'
+          example: 'http://cover.jpg'
+    EmailVerify:
+      type: object
+      properties:
+        email_verify_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjU1Y2NkNDI5ZWJlNmIyYWY1NTlkNTI2IiwidG9rZW5fdHlwZSI6MywidmVyaWZ5IjowLCJpYXQiOjE3MDA1ODA2NzQsImV4cCI6MTcwMTE4NTQ3NH0.TOInSMhsTZqqlFgZPfpKuVGpo3-BJnXD0sK6ntD25AE'
+
+    UserVerifyStatus:
+      type: number
+      enum: [Unverified, Verified, Banned]
+      example: 1,3,2
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

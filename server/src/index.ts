@@ -14,6 +14,12 @@ import searchRouter from './routes/search.routes'
 import { createServer } from 'http'
 import conversationsRouter from './routes/conversation.routes'
 import initSocket from './utils/socket'
+import YAML from 'yaml'
+import fs from 'fs'
+import path from 'path'
+import swaggerUi from 'swagger-ui-express'
+const file = fs.readFileSync(path.resolve('Twitter_Swagger.yaml'), 'utf8')
+const swaggerDocument = YAML.parse(file)
 
 config()
 databaseService.connect().then(() => {
@@ -30,7 +36,7 @@ const httpServer = createServer(app)
 const port = process.env.PORT || 4000
 app.use(express.json())
 app.use(cors())
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use('/users', usersRouter)
 app.use('/medias', mediasRouter)
 app.use('/static', staticRouter)
