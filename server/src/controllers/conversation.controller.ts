@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
+import { GetConversationParams } from '~/models/requests/Conversations.request'
 import conversationService from '~/services/conversations.services'
+import { ParamsDictionary } from 'express-serve-static-core'
 
-export const getConversationsController = async (req: Request, res: Response) => {
+export const getConversationsController = async (
+  req: Request<ParamsDictionary, any, GetConversationParams>,
+  res: Response
+) => {
   // id client 2
   const { receiver_id } = req.params
   // id client 1
@@ -16,9 +21,11 @@ export const getConversationsController = async (req: Request, res: Response) =>
   })
   return res.json({
     message: 'Get conversations successfully!!',
-    data: result,
-    limit,
-    page,
-    total_page: Math.ceil(result.total / limit)
+    result: {
+      limit,
+      page,
+      total_page: Math.ceil(result.total / limit),
+      conversations: result.conversation
+    }
   })
 }

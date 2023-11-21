@@ -554,6 +554,15 @@ export const followValidator = validate(
   )
 )
 
+export const getConversationsValidator = validate(
+  checkSchema(
+    {
+      receiver_id: userIdSchema
+    },
+    ['params']
+  )
+)
+
 export const unFollowValidator = validate(
   checkSchema(
     {
