@@ -18,6 +18,7 @@ import YAML from 'yaml'
 import fs from 'fs'
 import path from 'path'
 import swaggerUi from 'swagger-ui-express'
+import { envConfig } from './constants/config'
 const file = fs.readFileSync(path.resolve('Twitter_Swagger.yaml'), 'utf8')
 const swaggerDocument = YAML.parse(file)
 
@@ -33,7 +34,7 @@ initFolder()
 const app = express()
 const httpServer = createServer(app)
 
-const port = process.env.PORT || 4000
+const port = envConfig.port || 4000
 app.use(express.json())
 app.use(cors())
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))

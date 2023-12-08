@@ -13,6 +13,7 @@ import { ObjectId } from 'mongodb'
 import { TokenPayload } from '~/models/requests/User.requests'
 import { UserVerifyStatus } from '~/constants/enum'
 import { REGEX_USERNAME } from '~/constants/regex'
+import { envConfig } from '~/constants/config'
 
 const passwordSchema: ParamSchema = {
   notEmpty: {
@@ -95,7 +96,7 @@ const forgotPasswordTokenSchema: ParamSchema = {
         // decoder verify forgot password token
         const decoded_forgot_password_token = await verifyToken({
           token: value,
-          secretOrpublicKey: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string
+          secretOrpublicKey: envConfig.jwtSecretForgotPasswordToken as string
         })
         // check user in database
         const { user_id } = decoded_forgot_password_token
@@ -287,7 +288,7 @@ export const accessTokenValidator = validate(
             try {
               const decoded_authorization = await verifyToken({
                 token: access_token,
-                secretOrpublicKey: process.env.JWT_SECRET_ACCESS_TOKEN as string
+                secretOrpublicKey: envConfig.jwtSecretAccessToken as string
               })
               return (req.decoded_authorization = decoded_authorization)
             } catch (error) {
@@ -327,7 +328,7 @@ export const refreshTokenValidator = validate(
               // decoder refresh token
               const decoded_refresh_token = await verifyToken({
                 token: value,
-                secretOrpublicKey: process.env.JWT_SECRET_REFRESH_TOKEN as string
+                secretOrpublicKey: envConfig.jwtSecretRefreshToken as string
               })
               // check refresh token in database
               const refresh_token = await databaseService.refreshTokens.findOne({ token: value })
@@ -354,10 +355,10 @@ export const refreshTokenValidator = validate(
 )
 
 /**
- * check email verify token 
+ * check email verify token
  * decoded email verify
  return (req.decoded_email_verify_token = decoded_email_verify_token)
- * 
+ *
  */
 export const verifyEmailValidator = validate(
   checkSchema(
@@ -375,7 +376,7 @@ export const verifyEmailValidator = validate(
             try {
               const decoded_email_verify_token = await verifyToken({
                 token: value,
-                secretOrpublicKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string
+                secretOrpublicKey: envConfig.jwtSecretEmailVerifyToken as string
               })
               return (req.decoded_email_verify_token = decoded_email_verify_token)
             } catch (error) {
@@ -393,10 +394,10 @@ export const verifyEmailValidator = validate(
 )
 
 /**
- * check forgot password token 
+ * check forgot password token
  * find forgot password in database
   return (req.user = user)
- * 
+ *
  */
 export const forgotPasswordValidator = validate(
   checkSchema(

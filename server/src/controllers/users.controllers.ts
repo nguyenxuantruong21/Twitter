@@ -23,6 +23,7 @@ import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import HTTP_STATUS from '~/constants/httpStatusCode'
 import { UserVerifyStatus } from '~/constants/enum'
+import { envConfig } from '~/constants/config'
 dotenv.config()
 
 export const loginController = async (
@@ -42,7 +43,7 @@ export const loginController = async (
 export const oauthController = async (req: Request, res: Response, next: NextFunction) => {
   const { code } = req.query
   const result = await userService.oauth(code as string)
-  const urlRedirect = `${process.env.CLIENT_REDIRECT_CALLBACK}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.newUser}&verify=${result.verify}`
+  const urlRedirect = `${envConfig.clientRedirectCallback}?access_token=${result.access_token}&refresh_token=${result.refresh_token}&new_user=${result.newUser}&verify=${result.verify}`
   res.redirect(urlRedirect)
 }
 
